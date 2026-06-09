@@ -44,12 +44,13 @@ Header requerido: Accept: application/json
 Uso de Token: Incluye en tus peticiones el header: Authorization: Bearer {TOKEN}.
 
 ## Endpoint Principales
-Método	Endpoint	Acceso
-POST	/api/login	Público
-POST	/api/logout	Protegido
-GET	/api/user	Protegido
-GET/POST/PUT/DELETE	/api/productos	Protegido
-POST	/api/ventas	Protegido
+| Método | Endpoint | Acceso|
+|--------|----------|-------|
+|POST|/api/login|Público|
+|POST|/api/logout|Protegido|
+|GET|/api/user|Protegido|
+|GET/POST/PUT/DELETE|/api/productos	|Protegido|
+|POST|/api/ventas|Protegido|
 
 #### Pruebas
 Ejecuta el conjunto de tests de integración para asegurar la estabilidad:
