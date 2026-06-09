@@ -22,26 +22,38 @@ Crear tu archivo de variables de entorno
 cp .env.example .env
 php artisan key:generate
 ```
+### 3 Configurar archivo .env
+Ingresar al rchivo .env y modificar los datos
+```php
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=db_papeleria
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
 ## Infraestructura (Docker)
 este proyecto para estudio utiliza contenedores para estandarizar el entorno:
 
-#### 3 Levantar servicios
+#### 4 Levantar servicios
 ```Bash
 docker-composer up -d
 ```
-#### 4 Inicializar Base de Datos
+#### 5 Inicializar Base de Datos
 Una vezz activados los contenedores, ejecuta las migraciones y seeders
 
 ```Bash
-docker-compose exec app php artisan migrate --seed
+php artisan migrate --seed
 ```
 
 ## Autenticación (Laravel Sanctum)
-Para acceder a rutas protegidas:
-Login: POST /api/login
-Header requerido: Accept: application/json
-Uso de Token: Incluye en tus peticiones el header: Authorization: Bearer {TOKEN}.
+**Para acceder a rutas protegidas: (usar postman u otro)**
+
+**Login:** POST /api/login
+Conten-type:application/json
+
+**Uso de Token:** Incluye en tus peticiones el header: Authorization: Bearer {TOKEN}.
 
 ## Endpoint Principales
 | Método | Endpoint | Acceso|
@@ -56,5 +68,5 @@ Uso de Token: Incluye en tus peticiones el header: Authorization: Bearer {TOKEN}
 Ejecuta el conjunto de tests de integración para asegurar la estabilidad:
 
 ```Bash
-docker-compose exec app php artisan test
+php artisan test
 ```
