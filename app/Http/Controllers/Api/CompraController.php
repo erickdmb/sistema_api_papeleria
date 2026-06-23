@@ -14,7 +14,13 @@ class CompraController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Compra::with('proveedor');
+        $relations = ['proveedor'];
+
+        if ($request->boolean('include_details', false)) {
+            $relations[] = 'detalles.producto';
+        }
+
+        $query = Compra::with($relations);
 
         if ($request->has('fecha')) {
             $query->whereDate('fecha', $request->input('fecha'));
@@ -24,7 +30,12 @@ class CompraController extends Controller
             $query->where('estado', $request->input('estado'));
         }
 
-        $compras = $query->orderBy('id_compra', 'desc')->paginate($request->input('per_page', 15));
+        if ($request->boolean('all', false) || $request->input('paginate') === 'false') {
+            $compras = $query->orderBy('id_compra', 'desc')->get();
+        } else {
+            $compras = $query->orderBy('id_compra', 'desc')->paginate($request->input('per_page', 15));
+        }
+
         return response()->json($compras);
     }
 

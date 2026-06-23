@@ -23,7 +23,11 @@ class ProveedorController extends Controller
             $query->where('activo', $request->boolean('activo'));
         }
 
-        $proveedores = $query->paginate($request->input('per_page', 15));
+        if ($request->boolean('all', false) || $request->input('paginate') === 'false') {
+            $proveedores = $query->get();
+        } else {
+            $proveedores = $query->paginate($request->input('per_page', 15));
+        }
         return response()->json($proveedores);
     }
 

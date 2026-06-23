@@ -46,4 +46,8 @@ Route::get('ventas', [VentaController::class, 'index']);
 Route::post('ventas', [VentaController::class, 'store']);
 Route::get('ventas/{id}', [VentaController::class, 'show']);
 Route::post('ventas/{id}/anular', [VentaController::class, 'anular']);
+Route::get('ventas/{id}/detalles', [VentaController::class, 'detalles']);
+
+// Ruta para historial de ventas de un cliente específico
+Route::get('clientes/{id}/ventas', [ClienteController::class, 'ventas']);
 

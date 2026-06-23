@@ -33,7 +33,11 @@ class ProductoController extends Controller
             $query->where('activo', $request->boolean('activo'));
         }
 
-        $productos = $query->paginate($request->input('per_page', 15));
+        if ($request->boolean('all', false) || $request->input('paginate') === 'false') {
+            $productos = $query->get();
+        } else {
+            $productos = $query->paginate($request->input('per_page', 15));
+        }
         return response()->json($productos);
     }
 

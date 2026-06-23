@@ -19,7 +19,11 @@ class ClienteController extends Controller
                   ->orWhere('email', 'like', "%{$buscar}%");
         }
 
-        $clientes = $query->paginate($request->input('per_page', 15));
+        if ($request->boolean('all', false) || $request->input('paginate') === 'false') {
+            $clientes = $query->get();
+        } else {
+            $clientes = $query->paginate($request->input('per_page', 15));
+        }
         return response()->json($clientes);
     }
 
@@ -76,5 +80,16 @@ class ClienteController extends Controller
 
         $cliente->delete();
         return response()->json(['message' => 'Cliente eliminado correctamente']);
+    }
+
+    public function ventas($id)
+    {
+        $cliente = Cliente::find($id);
+        if (!$cliente) {
+            return response()->json(['message' => 'Cliente no encontrado'], 404);
+        }
+
+        $ventas = $cliente->ventas()->with(['metodoPago', 'detalles.producto'])->orderBy('id_venta', 'desc')->get();
+        return response()->json($ventas);
     }
 }

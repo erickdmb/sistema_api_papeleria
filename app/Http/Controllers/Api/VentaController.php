@@ -15,7 +15,13 @@ class VentaController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Venta::with(['cliente', 'metodoPago']);
+        $relations = ['cliente', 'metodoPago'];
+
+        if ($request->boolean('include_details', false)) {
+            $relations[] = 'detalles.producto';
+        }
+
+        $query = Venta::with($relations);
 
         if ($request->has('fecha')) {
             $query->whereDate('fecha', $request->input('fecha'));
@@ -25,7 +31,12 @@ class VentaController extends Controller
             $query->where('estado', $request->input('estado'));
         }
 
-        $ventas = $query->orderBy('id_venta', 'desc')->paginate($request->input('per_page', 15));
+        if ($request->boolean('all', false) || $request->input('paginate') === 'false') {
+            $ventas = $query->orderBy('id_venta', 'desc')->get();
+        } else {
+            $ventas = $query->orderBy('id_venta', 'desc')->paginate($request->input('per_page', 15));
+        }
+
         return response()->json($ventas);
     }
 
@@ -171,5 +182,16 @@ class VentaController extends Controller
                 'error' => $e->getMessage()
             ], 422);
         }
+    }
+
+    public function detalles($id)
+    {
+        $venta = Venta::find($id);
+        if (!$venta) {
+            return response()->json(['message' => 'Venta no encontrada'], 404);
+        }
+
+        $detalles = $venta->detalles()->with('producto')->get();
+        return response()->json($detalles);
     }
 }
